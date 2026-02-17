@@ -51,7 +51,11 @@ export function ChatContainer() {
         {/* Header bar */}
         <header className="flex items-center justify-between border-b border-white/[0.06] bg-zinc-950/50 backdrop-blur-sm px-6 py-2.5">
           <div className="flex items-center gap-3">
-            <h2 className="text-sm font-semibold text-zinc-200">Performance Analysis</h2>
+            <h2 className="text-sm font-semibold text-zinc-200">
+              {uploadedFiles.length > 0
+                ? uploadedFiles[uploadedFiles.length - 1].game_name || uploadedFiles[uploadedFiles.length - 1].application
+                : "Performance Analysis"}
+            </h2>
             <div className="h-4 w-px bg-white/[0.06]" />
             <div className="flex items-center gap-1.5">
               {isConnected ? (

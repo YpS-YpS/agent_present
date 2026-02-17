@@ -139,9 +139,9 @@ export function FileUpload({
           >
             <CheckCircle className="h-4 w-4 shrink-0" />
             <div>
-              <span className="font-medium">{lastUpload.filename}</span>
+              <span className="font-medium">{lastUpload.game_name || lastUpload.application}</span>
               {" — "}
-              {lastUpload.application} | {lastUpload.rows.toLocaleString()} frames |{" "}
+              {lastUpload.rows.toLocaleString()} frames |{" "}
               {lastUpload.duration_seconds}s | ~
               {lastUpload.profile.avg_fps?.toFixed(0) || "?"} FPS avg
             </div>

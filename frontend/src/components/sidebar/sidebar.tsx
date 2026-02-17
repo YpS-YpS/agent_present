@@ -85,10 +85,10 @@ export function Sidebar({ files, onNewSession }: SidebarProps) {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-xs font-medium text-zinc-300 group-hover:text-white transition-colors">
-                      {f.filename}
+                      {f.game_name || f.application}
                     </p>
                     <p className="text-[10px] text-zinc-600 group-hover:text-zinc-500 transition-colors">
-                      {f.application} &middot; {f.rows.toLocaleString()} frames
+                      {f.rows.toLocaleString()} frames &middot; {f.duration_seconds}s
                     </p>
                   </div>
                   <ChevronRight className="h-3 w-3 text-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity" />

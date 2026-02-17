@@ -10,6 +10,7 @@ class UploadResponse(BaseModel):
     filename: str
     source_tool: str
     application: str
+    game_name: str
     rows: int
     duration_seconds: float
     columns_available: int

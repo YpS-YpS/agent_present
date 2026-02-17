@@ -30,6 +30,8 @@ _MOCK_KEYWORDS: list[str] = [
     "profile", "overview", "summary", "what data", "columns",
     # Percentiles
     "percentile", "p99", "p95", "1% low", "0.1% low",
+    # Game info
+    "what game", "game name", "which game", "application name",
     # General analysis
     "analyze", "analysis", "performance", "compare", "comparison",
 ]

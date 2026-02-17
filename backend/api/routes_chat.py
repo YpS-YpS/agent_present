@@ -41,9 +41,10 @@ def _build_context_message(session_id: str) -> str:
 
     lines = ["Available files in this session:"]
     for f in session.files.values():
+        game = f.game_name or f.application
         lines.append(
             f"- file_id: \"{f.file_id}\" | {f.original_name} | "
-            f"{f.application} | {f.row_count:,} rows | {f.duration_seconds}s | "
+            f"Game: {game} ({f.application}) | {f.row_count:,} rows | {f.duration_seconds}s | "
             f"Source: {f.source_tool}"
         )
     return "\n".join(lines)

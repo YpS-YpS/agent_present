@@ -5,6 +5,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, UploadFile, File
 
 from backend.core.config import settings
+from backend.core.game_resolver import resolve_game_name
 from backend.core.session_store import session_store, FileInfo
 from backend.models.schemas import UploadResponse
 from backend.parsers.registry import detect_parser
@@ -54,10 +55,11 @@ async def upload_file(session_id: str, file: UploadFile = File(...)):
     na_columns = [col for col in df.columns if df[col].isna().all()]
     available_columns = [col for col in df.columns if not df[col].isna().all()]
 
-    # Extract application name
+    # Extract application name and resolve friendly game name
     application = "Unknown"
     if "Application" in df.columns:
         application = str(df["Application"].iloc[0])
+    game_name = resolve_game_name(application)
 
     # Compute duration
     duration_seconds = 0.0
@@ -89,6 +91,7 @@ async def upload_file(session_id: str, file: UploadFile = File(...)):
         available_columns=available_columns,
         na_columns=na_columns,
         metadata=metadata,
+        game_name=game_name,
     )
 
     session_store.add_file(session_id, file_id, df, file_info)
@@ -98,6 +101,7 @@ async def upload_file(session_id: str, file: UploadFile = File(...)):
         filename=file.filename,
         source_tool=parser.get_source_name(),
         application=application,
+        game_name=game_name,
         rows=len(df),
         duration_seconds=round(duration_seconds, 2),
         columns_available=len(available_columns),

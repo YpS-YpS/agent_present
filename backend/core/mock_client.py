@@ -78,6 +78,8 @@ class MockClient:
             handler = self._handle_throttling(session_id, file_id)
         elif any(kw in lower for kw in ["latency", "input lag", "display lag"]):
             handler = self._handle_latency(session_id, file_id)
+        elif any(kw in lower for kw in ["what game", "game name", "which game", "application name"]):
+            handler = self._handle_game_info(session_id, file_id)
         elif any(kw in lower for kw in ["profile", "overview", "summary", "what data", "columns"]):
             handler = self._handle_profile(session_id, file_id)
         else:
@@ -123,6 +125,21 @@ class MockClient:
         from backend.tools.analysis_tools import compute_latency_stats
         result = compute_latency_stats(session_id, file_id)
         yield {"type": "text", "content": self._format_latency_result(result)}
+
+    async def _handle_game_info(self, session_id: str, file_id: str) -> AsyncIterator[dict]:
+        from backend.core.session_store import session_store
+        info = session_store.get_file_info(session_id, file_id)
+        if info:
+            game = info.game_name or info.application
+            yield {"type": "text", "content": (
+                f"## Game Information\n\n"
+                f"**Game:** {game}\n"
+                f"**Executable:** `{info.application}`\n"
+                f"**Capture Duration:** {info.duration_seconds}s\n"
+                f"**Total Frames:** {info.row_count:,}\n"
+            )}
+        else:
+            yield {"type": "text", "content": "Could not find file information."}
 
     async def _handle_profile(self, session_id: str, file_id: str) -> AsyncIterator[dict]:
         from backend.tools.data_tools import profile_data

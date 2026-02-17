@@ -26,6 +26,7 @@ export interface FileInfo {
   filename: string;
   source_tool: string;
   application: string;
+  game_name: string;
   rows: number;
   duration_seconds: number;
   columns_available: number;

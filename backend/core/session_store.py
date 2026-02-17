@@ -19,6 +19,7 @@ class FileInfo:
     na_columns: list[str]  # columns that are entirely NA
     upload_time: datetime = field(default_factory=datetime.utcnow)
     metadata: dict = field(default_factory=dict)  # extra info (present modes, etc.)
+    game_name: str = ""  # Friendly game name resolved from application exe
 
 
 @dataclass

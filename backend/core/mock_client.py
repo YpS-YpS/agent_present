@@ -55,7 +55,18 @@ class MockClient:
             return
 
         # Route based on keywords and delegate to handler
-        if any(kw in lower for kw in ["chart", "plot", "graph", "visualize", "show me", "draw"]):
+        if any(kw in lower for kw in [
+            "chart", "plot", "graph", "visualize", "show me", "draw", "display",
+            # Direct viz keywords that imply a chart
+            "utilization", "usage", "gpu util", "cpu util",
+            "power", "temperature",
+        ]):
+            handler = self._handle_visualization(session_id, file_id, lower)
+        elif "show " in lower and any(kw in lower for kw in [
+            "utilization", "busy", "fps", "frame", "latency", "throttl",
+            "power", "temp", "histogram",
+        ]):
+            # "Show <something>" patterns that imply visualization
             handler = self._handle_visualization(session_id, file_id, lower)
         elif any(kw in lower for kw in ["cpu busy", "gpu busy", "cpubusy", "gpubusy"]):
             handler = self._handle_cpu_gpu_busy(session_id, file_id)

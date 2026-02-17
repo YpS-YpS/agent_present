@@ -9,7 +9,7 @@ from backend.core.mock_client import MockClient
 # Keywords that the mock client can handle (PresentMon domain knowledge)
 _MOCK_KEYWORDS: list[str] = [
     # Visualization
-    "chart", "plot", "graph", "visualize", "show me", "draw",
+    "chart", "plot", "graph", "visualize", "show me", "show ", "draw", "display",
     # FPS / frame analysis
     "fps", "frame time", "frametime", "frame rate",
     # Stutter / jitter
@@ -18,14 +18,20 @@ _MOCK_KEYWORDS: list[str] = [
     "cpu busy", "gpu busy", "cpubusy", "gpubusy",
     "bound", "bottleneck", "cpu vs gpu", "cpu or gpu",
     "cpu-bound", "gpu-bound", "cpu bound", "gpu bound",
+    # Utilization
+    "utilization", "usage", "gpu util", "cpu util",
     # Throttling
     "throttl", "thermal", "power limit",
+    # Power & temperature
+    "power", "temperature", "temp ",
     # Latency
     "latency", "input lag", "display lag",
     # Data profile
     "profile", "overview", "summary", "what data", "columns",
     # Percentiles
     "percentile", "p99", "p95", "1% low", "0.1% low",
+    # General analysis
+    "analyze", "analysis", "performance", "compare", "comparison",
 ]
 
 

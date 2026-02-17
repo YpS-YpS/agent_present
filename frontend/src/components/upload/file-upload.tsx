@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { Upload, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { Upload, FileText, CheckCircle, AlertCircle, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 import type { FileInfo } from "@/lib/types";
 
 interface FileUploadProps {
@@ -56,16 +57,28 @@ export function FileUpload({
         onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
         className={cn(
-          "relative flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors",
+          "relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 transition-all duration-300",
           isDragOver
-            ? "border-blue-500 bg-blue-500/10"
-            : "border-border/50 hover:border-border"
+            ? "border-blue-400/50 bg-blue-500/5 scale-[1.01] shadow-lg shadow-blue-500/5"
+            : "border-white/[0.06] hover:border-white/[0.12] hover:bg-white/[0.02]"
         )}
       >
-        <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
-        <p className="text-sm text-muted-foreground">
+        <motion.div
+          animate={isDragOver ? { scale: 1.1, y: -4 } : { scale: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          className={cn(
+            "mb-3 flex h-12 w-12 items-center justify-center rounded-2xl transition-colors duration-300",
+            isDragOver
+              ? "bg-blue-500/15 text-blue-400"
+              : "bg-white/[0.04] text-zinc-500"
+          )}
+        >
+          <Upload className="h-6 w-6" />
+        </motion.div>
+
+        <p className="text-sm text-zinc-400">
           Drag & drop a CSV file, or{" "}
-          <label className="cursor-pointer text-blue-500 hover:underline">
+          <label className="cursor-pointer font-medium text-blue-400 hover:text-blue-300 transition-colors">
             browse
             <input
               type="file"
@@ -76,44 +89,65 @@ export function FileUpload({
             />
           </label>
         </p>
-        <p className="mt-1 text-xs text-muted-foreground/60">
+        <p className="mt-1.5 text-xs text-zinc-600">
           PresentMon CSV logs supported
         </p>
 
-        {isUploading && (
-          <div className="mt-3 w-full max-w-xs">
-            <div className="h-1.5 overflow-hidden rounded-full bg-zinc-800">
-              <div
-                className="h-full rounded-full bg-blue-500 transition-all"
-                style={{ width: `${uploadProgress}%` }}
-              />
-            </div>
-            <p className="mt-1 text-center text-xs text-muted-foreground">
-              Uploading... {uploadProgress}%
-            </p>
-          </div>
-        )}
+        <AnimatePresence>
+          {isUploading && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="mt-4 w-full max-w-xs"
+            >
+              <div className="h-1.5 overflow-hidden rounded-full bg-zinc-800/50">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${uploadProgress}%` }}
+                  transition={{ duration: 0.3 }}
+                />
+              </div>
+              <p className="mt-1.5 text-center text-xs text-zinc-500">
+                Uploading... {uploadProgress}%
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {uploadError && (
-        <div className="flex items-center gap-2 rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-400">
-          <AlertCircle className="h-4 w-4 shrink-0" />
-          {uploadError}
-        </div>
-      )}
+      <AnimatePresence>
+        {uploadError && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center gap-2 rounded-xl bg-red-500/8 border border-red-500/10 px-3.5 py-2.5 text-sm text-red-400"
+          >
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            {uploadError}
+          </motion.div>
+        )}
 
-      {lastUpload && !isUploading && (
-        <div className="flex items-center gap-2 rounded-md bg-green-500/10 px-3 py-2 text-sm text-green-400">
-          <CheckCircle className="h-4 w-4 shrink-0" />
-          <div>
-            <span className="font-medium">{lastUpload.filename}</span>
-            {" — "}
-            {lastUpload.application} | {lastUpload.rows.toLocaleString()} frames |{" "}
-            {lastUpload.duration_seconds}s | ~
-            {lastUpload.profile.avg_fps?.toFixed(0) || "?"} FPS avg
-          </div>
-        </div>
-      )}
+        {lastUpload && !isUploading && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center gap-2.5 rounded-xl bg-emerald-500/8 border border-emerald-500/10 px-3.5 py-2.5 text-sm text-emerald-400"
+          >
+            <CheckCircle className="h-4 w-4 shrink-0" />
+            <div>
+              <span className="font-medium">{lastUpload.filename}</span>
+              {" — "}
+              {lastUpload.application} | {lastUpload.rows.toLocaleString()} frames |{" "}
+              {lastUpload.duration_seconds}s | ~
+              {lastUpload.profile.avg_fps?.toFixed(0) || "?"} FPS avg
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

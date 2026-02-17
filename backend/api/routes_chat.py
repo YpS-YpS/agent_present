@@ -110,10 +110,9 @@ async def chat_websocket(websocket: WebSocket, session_id: str):
                             "content": f"Using {chunk['tool_name']}...",
                         })
                     elif chunk["type"] == "tool_end":
-                        await websocket.send_json({
-                            "type": "tool_status",
-                            "content": f"{chunk['tool_name']} complete",
-                        })
+                        # Don't send "complete" status — the "Using..." message
+                        # stays until next tool_start or message_end clears it
+                        pass
                     elif chunk["type"] == "token_usage":
                         token_usage = {
                             "input_tokens": chunk["input_tokens"],

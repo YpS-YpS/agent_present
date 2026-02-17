@@ -3,7 +3,8 @@
 import React, { Component, useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Maximize2, Minimize2, Download, AlertTriangle, Loader2 } from "lucide-react";
+import { Maximize2, Minimize2, Download, AlertTriangle, Loader2, BarChart3 } from "lucide-react";
+import { motion } from "framer-motion";
 import type { PlotlyChartData } from "@/lib/types";
 
 /* Error boundary to catch Plotly render crashes */
@@ -126,7 +127,7 @@ function PlotlyChart({
     <div style={style} className="relative">
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center text-xs text-zinc-500">
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <Loader2 className="mr-2 h-4 w-4 animate-spin text-blue-400" />
           Loading chart...
         </div>
       )}
@@ -153,61 +154,72 @@ export function ChartCard({ chart }: ChartCardProps) {
   };
 
   return (
-    <Card className="overflow-hidden border-border/50 bg-zinc-950 w-full">
-      <div className="flex items-center justify-between border-b border-border/30 px-4 py-2.5">
-        <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-          {typeof title === "string" ? title : "Chart"}
-        </span>
-        <div className="flex gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7 text-zinc-500 hover:text-zinc-200"
-            onClick={() => setExpanded(!expanded)}
-          >
-            {expanded ? (
-              <Minimize2 className="h-3.5 w-3.5" />
-            ) : (
-              <Maximize2 className="h-3.5 w-3.5" />
-            )}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-7 w-7 text-zinc-500 hover:text-zinc-200"
-            onClick={handleDownload}
-          >
-            <Download className="h-3.5 w-3.5" />
-          </Button>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="overflow-hidden border-white/[0.06] bg-zinc-950/80 backdrop-blur-sm w-full">
+        <div className="flex items-center justify-between border-b border-white/[0.04] px-4 py-2.5">
+          <div className="flex items-center gap-2">
+            <div className="flex h-5 w-5 items-center justify-center rounded-md bg-blue-500/10">
+              <BarChart3 className="h-3 w-3 text-blue-400" />
+            </div>
+            <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
+              {typeof title === "string" ? title : "Chart"}
+            </span>
+          </div>
+          <div className="flex gap-0.5">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-white/[0.04] transition-all"
+              onClick={() => setExpanded(!expanded)}
+            >
+              {expanded ? (
+                <Minimize2 className="h-3.5 w-3.5" />
+              ) : (
+                <Maximize2 className="h-3.5 w-3.5" />
+              )}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-white/[0.04] transition-all"
+              onClick={handleDownload}
+            >
+              <Download className="h-3.5 w-3.5" />
+            </Button>
+          </div>
         </div>
-      </div>
-      <div className={expanded ? "h-[550px]" : "h-[350px]"}>
-        <ChartErrorBoundary>
-          <PlotlyChart
-            data={chart.data || []}
-            layout={{
-              ...chart.layout,
-              autosize: true,
-              margin: { l: 60, r: 30, t: 10, b: 50 },
-              title: undefined,
-              legend: {
-                ...chart.layout?.legend,
-                orientation: "h" as const,
-                y: -0.15,
-                x: 0.5,
-                xanchor: "center" as const,
-              },
-            }}
-            config={{
-              responsive: true,
-              displayModeBar: true,
-              displaylogo: false,
-              modeBarButtonsToRemove: ["lasso2d", "select2d"],
-            }}
-            style={{ width: "100%", height: "100%" }}
-          />
-        </ChartErrorBoundary>
-      </div>
-    </Card>
+        <div className={expanded ? "h-[550px]" : "h-[350px]"}>
+          <ChartErrorBoundary>
+            <PlotlyChart
+              data={chart.data || []}
+              layout={{
+                ...chart.layout,
+                autosize: true,
+                margin: { l: 60, r: 30, t: 10, b: 50 },
+                title: undefined,
+                legend: {
+                  ...chart.layout?.legend,
+                  orientation: "h" as const,
+                  y: -0.15,
+                  x: 0.5,
+                  xanchor: "center" as const,
+                },
+              }}
+              config={{
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false,
+                modeBarButtonsToRemove: ["lasso2d", "select2d"],
+              }}
+              style={{ width: "100%", height: "100%" }}
+            />
+          </ChartErrorBoundary>
+        </div>
+      </Card>
+    </motion.div>
   );
 }

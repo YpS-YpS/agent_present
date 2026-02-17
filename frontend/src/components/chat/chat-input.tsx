@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Send,
+  Square,
   Paperclip,
   Loader2,
   Lightbulb,
@@ -17,6 +18,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 import type { FileInfo } from "@/lib/types";
 
 /* ------------------------------------------------------------------ */
@@ -174,66 +176,74 @@ export function ChatInput({
   };
 
   return (
-    <div className="relative border-t border-border/50 bg-background px-4 py-3">
+    <div className="relative border-t border-white/[0.06] bg-zinc-950/80 backdrop-blur-sm px-4 py-3">
       {/* Tips popup */}
-      {tipsOpen && (
-        <div
-          ref={tipsRef}
-          className="absolute bottom-full left-0 right-0 z-50 mb-2 px-4"
-        >
-          <div className="mx-auto max-w-3xl rounded-2xl border border-border/50 bg-zinc-950 shadow-2xl shadow-black/50">
-            {/* Popup header */}
-            <div className="flex items-center justify-between border-b border-border/30 px-5 py-3">
-              <div className="flex items-center gap-2">
-                <Lightbulb className="h-4 w-4 text-amber-400" />
-                <span className="text-sm font-semibold">Prompt Tips</span>
-              </div>
-              <button
-                onClick={() => setTipsOpen(false)}
-                className="rounded-lg p-1 text-muted-foreground transition-colors hover:bg-zinc-800 hover:text-foreground"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* Tip categories grid */}
-            <div className="max-h-[60vh] overflow-y-auto p-4">
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {TIP_CATEGORIES.map((cat) => (
-                  <div key={cat.label} className="space-y-2">
-                    <div className="flex items-center gap-1.5">
-                      <cat.icon className={`h-3.5 w-3.5 ${cat.color}`} />
-                      <span
-                        className={`text-[10px] font-semibold uppercase tracking-wider ${cat.color}`}
-                      >
-                        {cat.label}
-                      </span>
-                    </div>
-                    <div className="space-y-1">
-                      {cat.queries.map((q) => (
-                        <button
-                          key={q}
-                          onClick={() => handleTipClick(q)}
-                          className="w-full text-left rounded-lg bg-zinc-900/80 px-2.5 py-1.5 text-[11px] text-zinc-400 transition-all hover:bg-zinc-800 hover:text-white"
-                        >
-                          {q}
-                        </button>
-                      ))}
-                    </div>
+      <AnimatePresence>
+        {tipsOpen && (
+          <motion.div
+            ref={tipsRef}
+            initial={{ opacity: 0, y: 10, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            transition={{ duration: 0.2 }}
+            className="absolute bottom-full left-0 right-0 z-50 mb-2 px-4"
+          >
+            <div className="mx-auto max-w-3xl rounded-2xl border border-white/[0.06] bg-zinc-950/95 backdrop-blur-xl shadow-2xl shadow-black/50">
+              {/* Popup header */}
+              <div className="flex items-center justify-between border-b border-white/[0.04] px-5 py-3">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-amber-500/10">
+                    <Lightbulb className="h-3.5 w-3.5 text-amber-400" />
                   </div>
-                ))}
+                  <span className="text-sm font-semibold text-zinc-200">Prompt Tips</span>
+                </div>
+                <button
+                  onClick={() => setTipsOpen(false)}
+                  className="rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-white/[0.04] hover:text-zinc-300"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Tip categories grid */}
+              <div className="max-h-[60vh] overflow-y-auto p-4">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                  {TIP_CATEGORIES.map((cat) => (
+                    <div key={cat.label} className="space-y-2">
+                      <div className="flex items-center gap-1.5">
+                        <cat.icon className={`h-3.5 w-3.5 ${cat.color}`} />
+                        <span
+                          className={`text-[10px] font-semibold uppercase tracking-wider ${cat.color}`}
+                        >
+                          {cat.label}
+                        </span>
+                      </div>
+                      <div className="space-y-1">
+                        {cat.queries.map((q) => (
+                          <button
+                            key={q}
+                            onClick={() => handleTipClick(q)}
+                            className="w-full text-left rounded-lg bg-white/[0.02] border border-white/[0.04] px-2.5 py-1.5 text-[11px] text-zinc-400 transition-all hover:bg-white/[0.06] hover:text-white hover:border-white/[0.08]"
+                          >
+                            {q}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Input bar */}
       <div className="mx-auto flex max-w-3xl items-center gap-2">
         <Button
           variant="ghost"
           size="icon"
-          className="h-10 w-10 shrink-0 text-muted-foreground hover:text-foreground"
+          className="h-10 w-10 shrink-0 rounded-xl text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04] transition-all duration-200"
           onClick={handleFileClick}
           title="Upload CSV file"
         >
@@ -252,10 +262,10 @@ export function ChatInput({
           variant="ghost"
           size="icon"
           className={cn(
-            "h-10 w-10 shrink-0 transition-colors",
+            "h-10 w-10 shrink-0 rounded-xl transition-all duration-200",
             tipsOpen
               ? "text-amber-400 bg-amber-500/10"
-              : "text-muted-foreground hover:text-foreground"
+              : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04]"
           )}
           onClick={() => setTipsOpen(!tipsOpen)}
           title="Prompt tips"
@@ -277,7 +287,7 @@ export function ChatInput({
             disabled={!isConnected}
             rows={1}
             className={cn(
-              "w-full resize-none rounded-xl border border-border bg-zinc-900 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-blue-500/50 focus:outline-none focus:ring-1 focus:ring-blue-500/30",
+              "w-full resize-none rounded-xl border border-white/[0.06] bg-white/[0.03] px-4 py-2.5 text-sm text-foreground placeholder:text-zinc-600 focus:border-blue-500/30 focus:outline-none focus:ring-1 focus:ring-blue-500/20 focus:bg-white/[0.04] transition-all duration-200",
               !isConnected && "opacity-50"
             )}
           />
@@ -285,12 +295,19 @@ export function ChatInput({
 
         <Button
           size="icon"
-          className="h-10 w-10 shrink-0 rounded-xl bg-blue-600 hover:bg-blue-700"
+          className={cn(
+            "h-10 w-10 shrink-0 rounded-xl transition-all duration-300 shadow-lg",
+            isLoading
+              ? "bg-gradient-to-br from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 shadow-red-500/25 animate-pulse"
+              : input.trim()
+                ? "bg-gradient-to-br from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 shadow-emerald-500/25 scale-100 hover:scale-105"
+                : "bg-zinc-800 hover:bg-zinc-700 shadow-none"
+          )}
           onClick={handleSubmit}
-          disabled={!input.trim() || isLoading || !isConnected}
+          disabled={(!input.trim() && !isLoading) || !isConnected}
         >
           {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Square className="h-3.5 w-3.5 fill-current" />
           ) : (
             <Send className="h-4 w-4" />
           )}

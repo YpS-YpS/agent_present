@@ -16,13 +16,17 @@ orchestrator = Orchestrator()
 
 
 def _get_client():
-    """Get the appropriate LLM client based on config."""
+    """Get the appropriate LLM client based on config.
+
+    - use_mock=true  → pure mock (no API key needed)
+    - use_mock=false → hybrid: mock for PresentMon queries, Claude for the rest
+    """
     if settings.use_mock:
         from backend.core.mock_client import MockClient
         return MockClient()
     else:
-        from backend.core.claude_client import ClaudeClient
-        return ClaudeClient(
+        from backend.core.hybrid_client import HybridClient
+        return HybridClient(
             api_key=settings.anthropic_api_key,
             model=settings.model_name,
             max_tokens=settings.max_tokens,

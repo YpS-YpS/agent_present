@@ -11,7 +11,12 @@ from backend.core.config import settings
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    print(f"Starting PresentMon Analyzer API (mode={'mock' if settings.use_mock else 'claude'})")
+    mode = "mock-only" if settings.use_mock else "hybrid (mock + claude)"
+    print(f"Starting PresentMon Analyzer API (mode={mode}, model={settings.model_name})")
+    print(f"  API key set: {'yes' if settings.anthropic_api_key else 'NO'}")
+    if not settings.use_mock:
+        print(f"  PresentMon queries → mock (fast, free)")
+        print(f"  Other queries → Claude API")
     yield
     # Shutdown
     print("Shutting down...")

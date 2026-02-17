@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:claude.com)",
+      "Bash(npx create-next-app:*)",
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest init:*)",
+      "Bash(npx shadcn:*)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "Bash(npx next build:*)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(ping:*)",
+      "Bash(taskkill /F /FI \"WINDOWTITLE eq *uvicorn*\")",
+      "Bash(taskkill:*)",
+      "Bash(copy:*)",
+      "Bash(cmd.exe /c \"cd C:\\\\code\\\\Agent_debug\\\\frontend && npx next build\")",
+      "Bash(cmd.exe /c \"cd /d C:\\\\code\\\\Agent_debug\\\\frontend && npx next build 2>&1\")",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\code\\\\Agent_debug\\\\frontend''; npx next build 2>&1\")",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\code\\\\Agent_debug''; python -c ''from backend.core.mock_client import MockClient; from backend.core.claude_client import ClaudeClient; from backend.api.routes_chat import router; print\\(\"\"All imports OK\"\"\\)''\")",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\code\\\\Agent_debug\\\\frontend''; node -e \"\"const pkg = require\\(''./package.json''\\); console.log\\(JSON.stringify\\({deps: pkg.dependencies}, null, 2\\)\\)\"\"\")",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\code\\\\Agent_debug\\\\backend''; python -c \"\"\nimport json\nimport numpy as np\n\n# Test if numpy types in plotly JSON cause issues\nval = np.float64\\(123.456\\)\nprint\\(type\\(val\\)\\)\ntry:\n    json.dumps\\({''test'': val}\\)\n    print\\(''json.dumps works with numpy float64''\\)\nexcept TypeError as e:\n    print\\(f''json.dumps FAILS: {e}''\\)\n\"\" 2>&1\")",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\code\\\\Agent_debug''; python -c \"\"\nimport json\nimport sys\nsys.path.insert\\(0, ''.''\\)\n\n# Simulate upload + chart generation\nfrom backend.core.session_store import session_store\nsession = session_store.get_or_create_session\\(''test123''\\)\n\n# Load a file\nfrom backend.parsers.registry import parser_registry\nwith open\\(''data/Dota2_presentmon.csv'', ''rb''\\) as f:\n    content = f.read\\(\\)\nfile_info, df = parser_registry.parse\\(content, ''Dota2_presentmon.csv''\\)\nsession.add_file\\(file_info, df\\)\nfid = file_info.file_id\nprint\\(f''File loaded: {fid}, rows={len\\(df\\)}''\\)\n\n# Generate chart\nfrom backend.tools.chart_tools import chart_frametime_timeline\nresult = chart_frametime_timeline\\(''test123'', fid\\)\nprint\\(f''Result type: {result[\"\"type\"\"]}''\\)\nplotly_json = result[''plotly_json'']\nprint\\(f''plotly_json keys: {list\\(plotly_json.keys\\(\\)\\)}''\\)\nprint\\(f''data traces: {len\\(plotly_json[\"\"data\"\"]\\)}''\\)\nprint\\(f''layout title: {plotly_json[\"\"layout\"\"].get\\(\"\"title\"\"\\)}''\\)\n\n# Test JSON serialization \\(what WebSocket would do\\)\nws_msg = {''type'': ''chart'', ''data'': plotly_json}\nserialized = json.dumps\\(ws_msg\\)\nprint\\(f''Serialized OK, length: {len\\(serialized\\)}''\\)\n\n# Parse it back \\(what frontend would do\\)\nparsed = json.loads\\(serialized\\)\nchart_data = parsed[''data'']\nprint\\(f''Frontend chart_data keys: {list\\(chart_data.keys\\(\\)\\)}''\\)\nprint\\(f''Frontend chart_data[\"\"data\"\"] length: {len\\(chart_data[\"\"data\"\"]\\)}''\\)\nprint\\(f''Frontend chart_data[\"\"layout\"\"] present: {\"\"layout\"\" in chart_data}''\\)\n\"\" 2>&1\")",
+      "Bash(powershell.exe -Command \"Set-Location ''C:\\\\code\\\\Agent_debug''; python test_chart.py 2>&1\")",
+      "Bash(powershell.exe:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
